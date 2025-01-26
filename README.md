@@ -17,6 +17,20 @@
 #               : https://discord.gg/uZX6rD9Yck
 # ============================================== #
 ```
+## Mục lục
+1. [Mục đích](#1-mục-đích)
+2. [Quy tắc sử dụng HTTP Status Codes](#2-quy-tắc-sử-dụng-http-status-codes)
+   - [Mã 2xx: Thành công](#21-mã-2xx-thành-công)
+   - [Mã 4xx: Lỗi phía Client](#22-mã-4xx-lỗi-phía-client)
+   - [Mã 5xx: Lỗi phía Server](#23-mã-5xx-lỗi-phía-server)
+3. [Quy chuẩn thiết kế RESTful API](#3-quy-chuẩn-thiết-kế-restful-api)
+   - [Quy tắc đặt tên URI](#31-quy-tắc-đặt-tên-uri) ✨
+   - [Cấu trúc URI theo cấp bậc](#32-cấu-trúc-uri-theo-cấp-bậc) ✨
+   - [Quy tắc trả dữ liệu JSON](#33-quy-tắc-trả-dữ-liệu-json)
+   - [Quy tắc về versioning (Phiên bản hóa API)](#34-quy-tắc-về-versioning-phiên-bản-hóa-api)
+4. [Quy chuẩn xử lý lỗi và trả về lỗi từ API](#4-quy-chuẩn-xử-lý-lỗi-và-trả-về-lỗi-từ-api)
+   - [Cấu trúc phản hồi](#41-cấu-trúc-phản-hồi)
+   - [Quy tắc tạo "message" và "errors"](#42-quy-tắc-tạo-message-và-errors)
 
 ## 1. Mục đích
 Tài liệu này đặt ra quy chuẩn về việc sử dụng **HTTP status codes** và xây dựng **RESTful API** nhằm đảm bảo tính thống nhất, hiệu quả và dễ bảo trì cho dự án nhóm sử dụng **Laravel** làm backend.
@@ -30,6 +44,8 @@ Tài liệu này đặt ra quy chuẩn về việc sử dụng **HTTP status cod
 - **201 Created**: Sử dụng khi một resource mới được tạo thành công. Ví dụ: tạo tài khoản, tạo đơn hàng.
 - **204 No Content**: Khi yêu cầu xử lý thành công nhưng không có nội dung nào trả về, ví dụ: xóa tài nguyên.
 
+[⬆ Quay lại Mục lục](#mục-lục)
+ 
 ### 2.2 Mã 4xx: Lỗi phía Client
 - **400 Bad Request**: Sử dụng khi dữ liệu từ client gửi lên không hợp lệ (form không hợp lệ, JSON sai định dạng).
 - **401 Unauthorized**: Sử dụng khi người dùng chưa xác thực hoặc token không hợp lệ (Tức chưa đăng nhập).
@@ -37,10 +53,14 @@ Tài liệu này đặt ra quy chuẩn về việc sử dụng **HTTP status cod
 - **404 Not Found**: Khi không tìm thấy tài nguyên yêu cầu. Ví dụ: yêu cầu một sản phẩm không tồn tại.
 - **429 Too Many Requests**: Khi người dùng gửi quá nhiều yêu cầu trong một khoảng thời gian (rate limiting).
 
+[⬆ Quay lại Mục lục](#mục-lục) 
+
 ### 2.3 Mã 5xx: Lỗi phía Server
 - **500 Internal Server Error**: Lỗi không xác định từ server. Cần kiểm tra logs để xử lý (dùng `try` `catch` để bắt lỗi này).
 - **503 Service Unavailable**: Dùng khi server đang bảo trì hoặc quá tải, không thể xử lý yêu cầu.
 
+[⬆ Quay lại Mục lục](#mục-lục)
+ 
 ---
 
 ## 3. Quy chuẩn thiết kế RESTful API
@@ -63,12 +83,17 @@ URI (Uniform Resource Identifier) cần tuân thủ theo chuẩn **RESTful** và
   - `PATCH`: Cập nhật một phần tài nguyên.
   - `DELETE`: Xóa tài nguyên.
 
+[⬆ Quay lại Mục lục](#mục-lục)
+
 ### 3.2 Cấu trúc URI theo cấp bậc
 Cấu trúc URI cần rõ ràng theo cấp bậc, phản ánh mối quan hệ giữa các tài nguyên. Ví dụ:
 - **GET** `/users/{user_id}/orders`: Lấy danh sách đơn hàng của một người dùng cụ thể.
 - **POST** `/products/{product_id}/reviews`: Thêm mới một đánh giá cho một sản phẩm.
 - **PUT** `/users/{user_id}/orders/{order_id}`: Cập nhật đơn hàng cho một người dùng cụ thể.
 - **DELETE** `/users/{user_id}/orders/{order_id}`: Xóa đơn hàng của một người dùng.
+
+[⬆ Quay lại Mục lục](#mục-lục)
+
 ### 3.3 Quy tắc trả dữ liệu JSON
 - **Trả dữ liệu kèm HTTP Status**: Luôn luôn kèm trạng thái HTTP Status
   - Ví dụ:
@@ -134,11 +159,15 @@ Cấu trúc URI cần rõ ràng theo cấp bậc, phản ánh mối quan hệ gi
       }
     }
     ```
-
+  
+[⬆ Quay lại Mục lục](#mục-lục)
+ 
 ### 3.4 Quy tắc về versioning (Phiên bản hóa API)
 - **Sử dụng versioning trong URI**: Để duy trì tính tương thích khi API được thay đổi, cần áp dụng version cho API. Version có thể được đặt ở đầu URI.
   - Ví dụ: `/v1/users`, `/v2/products`
 
+[⬆ Quay lại Mục lục](#mục-lục)
+ 
 ---
 
 ## 4. Quy chuẩn xử lý lỗi và trả về lỗi từ API
@@ -161,6 +190,11 @@ Phản hồi lỗi từ API phải theo chuẩn, cung cấp thông tin rõ ràng
         }
     }
 
+[⬆ Quay lại Mục lục](#mục-lục)
+ 
 ### 4.2 Quy tắc tạo "message" và "errors"
   - **Message**: Dùng một thông báo chung khi không cần chi tiết (VD: `"Resource not found"`).
   - **Errors**: Dùng cho chi tiết lỗi khi cần (VD: `"email": ["The email field is required."]`).
+
+[⬆ Quay lại Mục lục](#mục-lục)
+ 
