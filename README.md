@@ -185,8 +185,8 @@ Phản hồi lỗi từ API phải theo chuẩn, cung cấp thông tin rõ ràng
         "status": 400,
         "message": "Invalid input data",
         "errors": {
-        "email": ["The email field is required."],
-        "password": ["The password must be at least 8 characters."]
+          "email": ["The email field is required."],
+          "password": ["The password must be at least 8 characters."]
         }
     }
 
