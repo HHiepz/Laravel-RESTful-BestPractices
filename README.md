@@ -153,7 +153,7 @@ Phản hồi lỗi từ API phải theo chuẩn, cung cấp thông tin rõ ràng
     - Ví dụ:
     ```json
     {
-        "status": "error",
+        "status": 400,
         "message": "Invalid input data",
         "errors": {
         "email": ["The email field is required."],
