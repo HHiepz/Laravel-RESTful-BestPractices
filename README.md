@@ -1,22 +1,5 @@
 # Quy Chuẩn HTTP & RESTful API trong Laravel
 
-```bash
-# ============================================== #
-#  ____  _  _______  _______                     #
-# |___ \| |/ / _ \ \/ /_   _|__  __ _ _ __ ___   #
-#   __) | ' / (_) \  /  | |/ _ \/ _` | '_ ` _ \  #
-#  / __/| . \\__, /  \  | |  __/ (_| | | | | | | #
-# |_____|_|\_\ /_/_/\_\ |_|\___|\__,_|_| |_| |_| #
-#                                                #
-# ============================================== #
-# Author        : HHiepz
-# Created       : 2025-01-27
-# Version       : v1.0.0
-# Country       : Viet Nam
-# Contact       : contact.2k9x@gmail.com
-#               : https://discord.gg/uZX6rD9Yck
-# ============================================== #
-```
 ## Mục lục
 1. [Mục đích](#1-mục-đích)
 2. [Quy tắc sử dụng HTTP Status Codes](#2-quy-tắc-sử-dụng-http-status-codes)
@@ -32,8 +15,10 @@
    - [Cấu trúc phản hồi](#41-cấu-trúc-phản-hồi)
    - [Quy tắc tạo "message" và "errors"](#42-quy-tắc-tạo-message-và-errors)
 
+---
+
 ## 1. Mục đích
-Tài liệu này đặt ra quy chuẩn về việc sử dụng **HTTP status codes** và xây dựng **RESTful API** nhằm đảm bảo tính thống nhất, hiệu quả và dễ bảo trì cho dự án nhóm sử dụng **Laravel** làm backend.
+Tài liệu này đặt ra quy chuẩn về việc sử dụng **HTTP status codes** và xây dựng **RESTful API** nhằm đảm bảo tính thống nhất, hiệu quả và dễ bảo trì cho dự án nhóm sử dụng **Laravel** làm backend. Tài liệu tuân thủ các tiêu chuẩn của **Microsoft REST API Guidelines** và các quy tắc phổ biến trong thiết kế API.
 
 ---
 
@@ -41,26 +26,121 @@ Tài liệu này đặt ra quy chuẩn về việc sử dụng **HTTP status cod
 
 ### 2.1 Mã 2xx: Thành công
 - **200 OK**: Sử dụng khi yêu cầu được xử lý thành công. Áp dụng cho các thao tác lấy, cập nhật, xóa hoặc thực hiện thành công trên server.
+  - Ví dụ phản hồi:
+    ```json
+    {
+      "status": "success",
+      "message": "Resource retrieved successfully",
+      "data": {
+        "id": 1,
+        "name": "Product Name",
+        "price": 100
+      }
+    }
+    ```
 - **201 Created**: Sử dụng khi một resource mới được tạo thành công. Ví dụ: tạo tài khoản, tạo đơn hàng.
+  - Ví dụ phản hồi:
+    ```json
+    {
+      "status": "success",
+      "message": "Resource created successfully",
+      "data": {
+        "id": 1,
+        "name": "Product Name",
+        "price": 100
+      }
+    }
+    ```
 - **204 No Content**: Khi yêu cầu xử lý thành công nhưng không có nội dung nào trả về, ví dụ: xóa tài nguyên.
 
 [⬆ Quay lại Mục lục](#mục-lục)
- 
+
 ### 2.2 Mã 4xx: Lỗi phía Client
 - **400 Bad Request**: Sử dụng khi dữ liệu từ client gửi lên không hợp lệ (form không hợp lệ, JSON sai định dạng).
+  - Ví dụ phản hồi:
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid input data",
+      "errors": {
+        "email": ["The email field is required."],
+        "password": ["The password must be at least 8 characters."]
+      }
+    }
+    ```
 - **401 Unauthorized**: Sử dụng khi người dùng chưa xác thực hoặc token không hợp lệ (Tức chưa đăng nhập).
+  - Ví dụ phản hồi:
+    ```json
+    {
+      "status": "error",
+      "message": "Unauthorized",
+      "errors": {
+        "detail": "Authentication credentials were not provided."
+      }
+    }
+    ```
 - **403 Forbidden**: Sử dụng khi người dùng không có quyền truy cập tài nguyên. Dù đã đăng nhập (bị cấm truy cập).
+  - Ví dụ phản hồi:
+    ```json
+    {
+      "status": "error",
+      "message": "Forbidden",
+      "errors": {
+        "detail": "You do not have permission to access this resource."
+      }
+    }
+    ```
 - **404 Not Found**: Khi không tìm thấy tài nguyên yêu cầu. Ví dụ: yêu cầu một sản phẩm không tồn tại.
+  - Ví dụ phản hồi:
+    ```json
+    {
+      "status": "error",
+      "message": "Resource not found",
+      "errors": {
+        "detail": "The requested resource does not exist."
+      }
+    }
+    ```
 - **429 Too Many Requests**: Khi người dùng gửi quá nhiều yêu cầu trong một khoảng thời gian (rate limiting).
+  - Ví dụ phản hồi:
+    ```json
+    {
+      "status": "error",
+      "message": "Too many requests",
+      "errors": {
+        "detail": "Please try again later."
+      }
+    }
+    ```
 
-[⬆ Quay lại Mục lục](#mục-lục) 
+[⬆ Quay lại Mục lục](#mục-lục)
 
 ### 2.3 Mã 5xx: Lỗi phía Server
 - **500 Internal Server Error**: Lỗi không xác định từ server. Cần kiểm tra logs để xử lý (dùng `try` `catch` để bắt lỗi này).
+  - Ví dụ phản hồi:
+    ```json
+    {
+      "status": "error",
+      "message": "Internal Server Error",
+      "errors": {
+        "detail": "An unexpected error occurred. Please try again later."
+      }
+    }
+    ```
 - **503 Service Unavailable**: Dùng khi server đang bảo trì hoặc quá tải, không thể xử lý yêu cầu.
+  - Ví dụ phản hồi:
+    ```json
+    {
+      "status": "error",
+      "message": "Service Unavailable",
+      "errors": {
+        "detail": "The server is currently unavailable. Please try again later."
+      }
+    }
+    ```
 
 [⬆ Quay lại Mục lục](#mục-lục)
- 
+
 ---
 
 ## 3. Quy chuẩn thiết kế RESTful API
@@ -95,12 +175,12 @@ Cấu trúc URI cần rõ ràng theo cấp bậc, phản ánh mối quan hệ gi
 [⬆ Quay lại Mục lục](#mục-lục)
 
 ### 3.3 Quy tắc trả dữ liệu JSON
-- **Trả dữ liệu kèm HTTP Status**: Luôn luôn kèm trạng thái HTTP Status
+- **Trả dữ liệu kèm HTTP Status**: Luôn luôn kèm trạng thái HTTP Status.
   - Ví dụ:
     - Lấy dữ liệu thành công
     ```php
     return response()->json([
-        'status' => 200,
+        'status' => "success",
         'message' => 'Resource retrieved successfully',
         'data' => $resource
     ], 200);
@@ -108,7 +188,7 @@ Cấu trúc URI cần rõ ràng theo cấp bậc, phản ánh mối quan hệ gi
     - Tạo thành công
     ```php
     return response()->json([
-        'status' => 201,
+        'status' => "success",
         'message' => 'Resource created successfully',
         'data' => $resource
     ], 201);
@@ -116,7 +196,8 @@ Cấu trúc URI cần rõ ràng theo cấp bậc, phản ánh mối quan hệ gi
     - Xóa thành công
     ```php
     return response()->json([
-        'status' => 204,
+        'status' => "success",
+        'message' => 'Resource deleted successfully'
     ], 204);
     ```
 
@@ -124,7 +205,7 @@ Cấu trúc URI cần rõ ràng theo cấp bậc, phản ánh mối quan hệ gi
   - Ví dụ:
     ```json
     {
-      "status": 200,
+      "status": "success",
       "message": "Resource retrieved successfully",
       "data": {
         "id": 1,
@@ -137,7 +218,7 @@ Cấu trúc URI cần rõ ràng theo cấp bậc, phản ánh mối quan hệ gi
   - Ví dụ:
     ```json
     {
-      "status": 200,
+      "status": "success",
       "message": "Products retrieved successfully",
       "data": [
         {
@@ -159,42 +240,40 @@ Cấu trúc URI cần rõ ràng theo cấp bậc, phản ánh mối quan hệ gi
       }
     }
     ```
-  
+
 [⬆ Quay lại Mục lục](#mục-lục)
- 
+
 ### 3.4 Quy tắc về versioning (Phiên bản hóa API)
 - **Sử dụng versioning trong URI**: Để duy trì tính tương thích khi API được thay đổi, cần áp dụng version cho API. Version có thể được đặt ở đầu URI.
   - Ví dụ: `/v1/users`, `/v2/products`
 
 [⬆ Quay lại Mục lục](#mục-lục)
- 
+
 ---
 
 ## 4. Quy chuẩn xử lý lỗi và trả về lỗi từ API
 
-### 4.1 Cấu trúc phản hồi 
-
+### 4.1 Cấu trúc phản hồi
 Phản hồi lỗi từ API phải theo chuẩn, cung cấp thông tin rõ ràng và chi tiết khi cần thiết, đặc biệt là trong form validation. Cấu trúc phản hồi bao gồm:
-
-  - **status**: trạng thái (error).
+  - **status**: trạng thái (ví dụ: `"error"`).
   - **message**: mô tả ngắn gọn về lỗi.
   - **errors**: danh sách các lỗi chi tiết cho từng trường dữ liệu.
     - Ví dụ:
     ```json
     {
-        "status": 400,
+        "status": "error",
         "message": "Invalid input data",
         "errors": {
           "email": ["The email field is required."],
           "password": ["The password must be at least 8 characters."]
         }
     }
+    ```
 
 [⬆ Quay lại Mục lục](#mục-lục)
- 
+
 ### 4.2 Quy tắc tạo "message" và "errors"
   - **Message**: Dùng một thông báo chung khi không cần chi tiết (VD: `"Resource not found"`).
   - **Errors**: Dùng cho chi tiết lỗi khi cần (VD: `"email": ["The email field is required."]`).
 
 [⬆ Quay lại Mục lục](#mục-lục)
- 
