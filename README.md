@@ -195,10 +195,7 @@ Cấu trúc URI cần rõ ràng theo cấp bậc, phản ánh mối quan hệ gi
     ```
     - Xóa thành công
     ```php
-    return response()->json([
-        'status' => "success",
-        'message' => 'Resource deleted successfully'
-    ], 204);
+    return response()->noContent();  
     ```
 
 - **Trả về đối tượng JSON**: Mọi dữ liệu trả về từ API phải là JSON, bao gồm thông tin về **status**, **message**, và **data** nếu có.
